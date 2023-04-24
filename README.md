@@ -1,1 +1,3 @@
-# bloglite
+# Bloglite
+
+BlogLite is a simple blog application built using Flask - Python and Vue - JavaScript. Bloglite is a photo blogging platform, where-in they can post images online with a title and a description. This application is built with the intention of being lightweight and easy to understand, making it a great starting point for beginners who are interested in learning about web development with Flask.
