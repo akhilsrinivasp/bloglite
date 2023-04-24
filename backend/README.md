@@ -35,19 +35,22 @@ The `create_app` function is the main function which creates the app and registe
 
 ```python
 def create_app(config_class=LocalDevelopmentConfig):
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='templates', static_folder='static')
+    
     app.config.from_object(config_class)
-
-    from bloglite.api import bp as api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
-
-    from bloglite import models
-
-    @app.route('/', methods=['GET'])
-    def index():
-        return render_template('index.html')
-
-    return app
+    
+    db.init_app(app)
+    ma.init_app(app)
+    
+    api = Api(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    JWTManager(app)
+    
+    api = register_api(api)
+    
+    with app.app_context():
+        db.create_all() 
+    return app, api
 ```
 
 ## Models
