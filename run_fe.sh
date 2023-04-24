@@ -1,3 +1,3 @@
 echo running Frontend of Bloglite
 cd frontend
-npm install
+npm run serve
