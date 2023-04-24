@@ -24,4 +24,3 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = COMMON_DB
     DEBUG = False
     SECRET_KEY = SECRET_KEY
-    WTF_CSRF_ENABLED = True

@@ -5,7 +5,7 @@ source venv/bin/activate
 
 # check for the .flaskenv file 
 if [ ! -f .flaskenv ]; then
-    echo "FLASK_APP=bloglite.py" >> .flaskenv
+    echo "FLASK_APP=app.py" >> .flaskenv
     echo "FLASK_ENV=development" >> .flaskenv
     echo "FLASK_DEBUG=1" >> .flaskenv
     echo "FLASK_RUN_PORT=5050" >> .flaskenv
