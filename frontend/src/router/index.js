@@ -8,6 +8,11 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/edit/user/:what',
+    name: 'edit_user',
+    component: ()  => import(/* webpackChunkName: "login" */ '../components/EditUser.vue'),
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '../views/LoginView.vue')

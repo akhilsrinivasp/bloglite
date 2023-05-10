@@ -3,6 +3,8 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from bloglite.models import User, users_schema, user_schema, Blog, blogs_schema, Follow, follows_schema
 from bloglite import db
 import json
+import requests
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 
 class UserAPI(Resource):
     @jwt_required()
@@ -18,7 +20,7 @@ class UserAPI(Resource):
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True)
-        parser.add_argument('email', required=True)
+        parser.add_argument('username', required=True)
         parser.add_argument('image', required=True)
         args = parser.parse_args()
         
@@ -27,12 +29,32 @@ class UserAPI(Resource):
             return {'message': 'User {} doesn\'t exist'.format(get_jwt_identity())}, 404
         
         user.name = args['name']
-        user.email = args['email']
         user.image = args['image']
         
+        # if username is changed, update all blogs and follows
+        if user.username != args['username']:
+            user.username = args['username']
+            blogs = Blog.query.filter_by(author=get_jwt_identity()).all()
+            for blog in blogs:
+                blog.author = args['username']
+            follows = Follow.query.filter_by(follower=get_jwt_identity()).all()
+            for follow in follows:
+                follow.follower = args['username']
+            follows = Follow.query.filter_by(following=get_jwt_identity()).all()
+            for follow in follows:
+                follow.following = args['username']
+            access_token = create_access_token(identity=args['username'])
+            refresh_token = create_refresh_token(identity=args['username'])
+            return {
+                'message': 'User {} was updated to {}'.format(get_jwt_identity(), args['username']),
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }, 200
         db.session.commit()
+        
+        
         return {'message': 'User {} was updated'.format(get_jwt_identity())}, 200
-    
+            
 class DummyAPI(Resource):
     def get(self):
         users = User.query.all()

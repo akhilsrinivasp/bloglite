@@ -37,10 +37,6 @@ class Register(Resource):
         # image = image.json()['image_name']
         if not request.form:
             return {'message': 'No data found'}, 404
-        
-        print(request.form)
-        print(request.form.get('name'))
-        print("\n\n\n\n\n\n\n\n\n")
         data = request.form
         name = data['name']
         username = data['username']

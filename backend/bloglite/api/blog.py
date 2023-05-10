@@ -33,12 +33,6 @@ class BlogAPI(Resource):
     
     @jwt_required()
     def post(self):
-        # parser = reqparse.RequestParser()
-        # parser.add_argument('title', required=True)
-        # parser.add_argument('content', required=True)
-        # parser.add_argument('image', required=True)
-        # args = parser.parse_args()
-        
         data = request.form
         
         if not data['title'] or not data['content']:

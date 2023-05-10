@@ -1,5 +1,5 @@
 from bloglite.api.user import UserAPI, DummyAPI, UserPublic
-from bloglite.api.image import Image
+from bloglite.api.image import Image, ImageUpload
 from bloglite.api.auth import Register, Login, Refresh, PasswordReset
 from bloglite.api.follow import FollowAPI, UnFollowAPI, Following, Followers
 from bloglite.api.blog import BlogAPI, PublicFeed, UserFeed, GetBlog
@@ -8,6 +8,7 @@ def register_api(api):
     api.add_resource(UserAPI, '/api/v1/user')
     api.add_resource(UserPublic, '/api/v1/user/<string:username>')
     api.add_resource(Image, '/api/v1/image/<string:type_or_name>')
+    api.add_resource(ImageUpload, '/api/v1/image')
     api.add_resource(Register, '/api/v1/register')
     api.add_resource(Login, '/api/v1/login')
     api.add_resource(Refresh, '/api/v1/refresh')

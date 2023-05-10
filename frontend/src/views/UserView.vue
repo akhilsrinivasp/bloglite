@@ -1,6 +1,6 @@
 <template>
     <div class="user">
-        <div class="header">
+        <div class="header" v-if="show_edit_user == false">
             <div class="profile-pic">
                 <img class="dp-image" :src="profile_pic_url" alt="Profile Picture">
             </div>
@@ -13,16 +13,21 @@
                 <button class="unfollow-button" v-else @click="unfollow_user">Unfollow</button>
             </div>
             <div class="edit-user" v-if="is_same_user == true">
-                <button class="edit-button" @click="edit_user">Edit Profile</button>
+                <button class="edit-button" @click="show_edit_user = !show_edit_user">
+                <router-link id="profile" style="text-decoration: none; color: white;"
+						:to="{ name: 'edit_user', params: { what: 0 } }">Edit Profile</router-link>
+                    </button>
             </div>
-            <div class="edit-user-container" v-if="show_edit_user == true">
-                <EditUser :user="user"/>
-            </div>
+            
         </div>
         
-        <div class="details">
+        <div class="details" v-if="show_edit_user == false">
             <div class="name">
                 <h3 class="public-user-name">{{ user.name }}</h3>
+            </div>
+            <div class="post-count followers">
+                <p class="follower-count">{{ no_of_posts }}</p>
+                <p style = "font-size: 18px; padding-top: 1%;" class="follower-text">Posts</p>
             </div>
             <div class="followers">
                 <p class="follower-count">{{ follower_count }}</p>
@@ -33,7 +38,7 @@
                 <p style = "font-size: 18px; padding-top: 1%;" class="following-text">Following</p>
             </div>
         </div>
-        <div class = "blog-grid">
+        <div v-if="show_edit_user == false" class = "blog-grid">
             <div class = "blog-posts" v-for="blog in blogs" :key="blog.id">
                 <BlogPost :blog="blog"/>
             </div>
@@ -43,17 +48,15 @@
 
 <script>
     import BlogPost from '../components/BlogPost.vue'
-    import EditUser from '../components/EditUser.vue'
 
     export default {
         name: 'UserView',
         components: {
             BlogPost,
-            EditUser
         },
         data() {
             return {
-                user: null,
+                user: this.$store.state.user,
                 blogs: null,
                 followers: null,
                 following: null,
@@ -81,13 +84,16 @@
                 return date_formatted;
             },
             profile_pic_url() {
-                const profile_pic_url = this.$store.state.url + "/image/" + this.user.image;
-                return profile_pic_url;
+                return this.$store.state.url + "image/" + this.user.image;  
             },
             is_same_user() {
                 if(!this.$store.state.isLogged) return false;
                 return this.$store.state.user.username == this.username
-            }
+            },
+            no_of_posts() {
+                if(this.blogs == null) return 0;
+                return this.blogs.length;
+            },
         },
         methods: {
             getUser() {
@@ -162,12 +168,12 @@
                     console.log(error);
                 })
             },
-            edit_user() {
-                this.show_edit_user = true;
-            },
         },
         created() {
             this.getUser();
+            if(this.$store.state.isLogged)
+            if(this.$store.state.user.username == this.$route.params.username)
+            this.user = JSON.parse(JSON.stringify(this.$store.state.user));
             this.is_following = false;
         },
         mounted() {
@@ -356,8 +362,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2%;
-
+/* 
         z-index: -1;
-        position: absolute;
+        position: absolute; */
     }
 </style>

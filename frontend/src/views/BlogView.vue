@@ -3,8 +3,7 @@
         <div class="blog" v-if="!edit">
             <div class="header">
                 <h1 class="title">{{ blog.title }}</h1>
-                <router-link class="author" :to="{ name: 'user', params: { username: blog.author } }">{{ blog.author
-                }}</router-link>
+                <router-link class="author" :to="{ name: 'user', params: { username: blog.author } }">{{ blog.author }}</router-link>
             </div>
             <img class="image-post" :src="image_url" alt="Blog Image">
             <div class="footer">
